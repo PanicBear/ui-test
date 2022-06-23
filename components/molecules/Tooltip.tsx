@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import styles from './tooltip.module.css';
 
 const TooltipArea = styled.div`
   text-align: center;
@@ -9,6 +8,13 @@ const TooltipArea = styled.div`
 const TooltipWindow = styled.div`
   position: relative;
   display: inline-block;
+
+  &:hover > span {
+    visibility: visible;
+    opacity: 1;
+  }
+`;
+const TooltipText = styled.span`
   visibility: hidden;
   width: 120px;
   background-color: gray;
@@ -24,7 +30,7 @@ const TooltipWindow = styled.div`
   opacity: 0;
   transition: opacity 0.7s;
 
-  ::after {
+  &::after {
     content: '';
     position: absolute;
     top: 100%;
@@ -34,13 +40,7 @@ const TooltipWindow = styled.div`
     border-style: solid;
     border-color: gray transparent transparent transparent;
   }
-
-  :hover {
-    visibility: visible;
-    opacity: 1;
-  }
 `;
-const TooltipText = styled.span``;
 
 interface TooltipProps {
   hoverText: string;
@@ -50,20 +50,10 @@ interface TooltipProps {
 const Tooltip: (props: TooltipProps) => JSX.Element = ({ children, hoverText }) => {
   return (
     <TooltipArea>
-      <span className={styles['test-class']}>test</span>
-      <div className={styles['custom-tooltip']}>
+      <TooltipWindow>
         {children}
-        <span className={styles['custom-tooltip-text']}>{hoverText}</span>
-      </div>
-      <span
-        style={{
-          display: 'block',
-          marginTop: 20,
-          color: 'blue',
-        }}
-      >
-        https://reactcodes.blogspot.com/
-      </span>
+        <TooltipText>{hoverText}</TooltipText>
+      </TooltipWindow>
     </TooltipArea>
   );
 };
