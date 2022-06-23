@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import styled from 'styled-components';
 
 const TemplateArea = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 200vh;
 `;
 const TemplateTitle = styled.h1`

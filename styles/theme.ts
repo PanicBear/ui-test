@@ -5,6 +5,7 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
     margin: 0;
     margin: auto;
+    /* max-width: 960px; */
   }
 
   a {

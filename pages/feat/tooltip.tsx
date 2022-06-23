@@ -1,11 +1,17 @@
-import { Tooltip } from '@components/molecules';
+import { InputField } from '@components/molecules';
 import { CommonTemplate } from '@components/templates';
 import { NextPage } from 'next';
 
 const Page: NextPage = () => {
+  const hoverText = `The password must be at least 8 characters. 
+  It must contain at least  numbers(0-9), upper and lower case letters (A-Z, a-z).`;
+
   return (
     <CommonTemplate title="Tooltip">
-      <Tooltip hoverText={'tooltip text'}>tooltip test</Tooltip>
+      <InputField label={'test'} />
+      <InputField label={'test'} />
+      <InputField label={'test'} />
+      <InputField label={'test'} tooltip={{ hoverText }} />
     </CommonTemplate>
   );
 };
