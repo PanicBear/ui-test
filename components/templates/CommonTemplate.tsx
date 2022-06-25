@@ -8,6 +8,9 @@ const TemplateArea = styled.div`
 const TemplateTitle = styled.h1`
   margin: 0;
 `;
+const ContentArea = styled.div`
+  padding: 20px;
+`;
 
 interface CommonPageTempalte {
   title: string;
@@ -18,7 +21,7 @@ const CommonTemplate: (props: CommonPageTempalte) => JSX.Element = ({ title, chi
   return (
     <TemplateArea>
       <TemplateTitle>{title}</TemplateTitle>
-      {children}
+      <ContentArea>{children}</ContentArea>
     </TemplateArea>
   );
 };

@@ -9,10 +9,15 @@ const Home: NextPage = () => {
     e.preventDefault();
     router.push('/feat/tooltip');
   };
+  const toVerifyInput: MouseEventHandler = (e) => {
+    e.preventDefault();
+    router.push('/feat/verify-input');
+  };
 
   return (
     <>
       <button onClick={toTooltip}>tooltip</button>
+      <button onClick={toVerifyInput}>verify input</button>
     </>
   );
 };
