@@ -13,11 +13,16 @@ const Home: NextPage = () => {
     e.preventDefault();
     router.push('/feat/verify-input');
   };
+  const toSelect: MouseEventHandler = (e) => {
+    e.preventDefault();
+    router.push('/feat/select');
+  };
 
   return (
     <>
       <button onClick={toTooltip}>tooltip</button>
       <button onClick={toVerifyInput}>verify input</button>
+      <button onClick={toSelect}>select</button>
     </>
   );
 };
