@@ -1,8 +1,9 @@
 import { Dropdown } from '@components/atoms/Icon';
 import useOutsideClick from '@hooks/useOutSideClick';
-import { useEffect, useRef, useState } from 'react';
-import { UseFormRegister, UseFormRegisterReturn } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
+import TextInput from './TextInput';
 
 const Wrapper = styled.div`
   position: relative;
@@ -75,51 +76,37 @@ const CustomOptionArea = styled.div<{ isOpen: boolean }>`
     box-shadow: -1px 1px 2px rgba(67, 70, 74, 0.0001), -2px 2px 5px rgba(67, 86, 100, 0.123689);
     border-radius: 8px;`}
 `;
-const CustomOption = styled.option`
-  position: relative;
-  display: block;
-  padding: 5px 8px;
-  cursor: pointer;
-  transition: all 0.5s;
-  border-radius: 6px;
-  color: ${(props) => props.theme.grey3};
-  ${(props) => props.theme.medium_14};
-  margin-bottom: 12px;
-  height: 32px;
+const Input = styled.input<{ highlight?: boolean; hasTooltip?: boolean }>`
+  width: 100%;
+  height: 50px;
+  padding: 16px 12px;
+  margin-top: 8px;
+  margin-right: ${({ hasTooltip }) => (hasTooltip ? '-20px' : 0)};
+  background-color: ${({ highlight, theme }) => (highlight ? theme.Color.Point2 : theme.Color.White)};
+  border: 1px solid ${({ highlight, theme }) => (highlight ? theme.Color.Point1 : theme.Color.Slate)};
+  border-radius: 8px;
+
+  ${({ theme }) => theme.Shadow.sm}
 `;
 
 interface SelectProps {
-  options: {
-    value: string;
-    label: string;
-  }[];
-  setValue: any;
-  register: UseFormRegisterReturn;
   label: string;
+  required?: boolean;
 }
 
-const Select = ({ options, setValue, label, register }: SelectProps) => {
+const Address = ({ label }: SelectProps) => {
   const [isOpen, setOpen] = useState(false);
   const [selected, setSelected] = useState<string>('');
   const selectRef = useRef(null);
+  const { register } = useFormContext();
 
   useOutsideClick(selectRef, () => {
     setOpen(false);
   });
-  useEffect(() => {
-    setValue(register.name, selected);
-  }, [selected]);
 
   return (
     <Wrapper>
       <Label>{label}</Label>
-      <InvisibleSelect {...register} id={register.name} name={register.name} className="html-select">
-        {options.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </InvisibleSelect>
       <CustomSelectArea
         ref={selectRef}
         onClick={() => {
@@ -128,25 +115,15 @@ const Select = ({ options, setValue, label, register }: SelectProps) => {
       >
         <CustomSelectRow>
           <CustomSelectTrigger>
-            <span>{options.find((item) => item.value === selected)?.label || 'Select'}</span>
+            {/* <span>{options.find((item) => item.value === selected)?.label || 'Select'}</span> */}
+            <span></span>
             <Dropdown />
           </CustomSelectTrigger>
-          <CustomOptionArea className="custom-options" isOpen={isOpen}>
-            {options.map((item) => (
-              <CustomOption
-                key={item.value}
-                onClick={() => {
-                  setSelected(item.value);
-                }}
-              >
-                {item.label}
-              </CustomOption>
-            ))}
-          </CustomOptionArea>
         </CustomSelectRow>
       </CustomSelectArea>
+      <Input placeholder="Address Detail" />
     </Wrapper>
   );
 };
 
-export default Select;
+export default Address;

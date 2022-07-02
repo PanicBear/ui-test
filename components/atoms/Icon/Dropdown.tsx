@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Icon() {
+function Dropdown() {
   return (
     <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
       <path
@@ -13,4 +13,4 @@ function Icon() {
   );
 }
 
-export default Icon;
+export default Dropdown;

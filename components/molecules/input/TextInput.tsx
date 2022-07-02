@@ -70,7 +70,7 @@ const TextInput: (props: InputFieldProps) => JSX.Element = ({
 }) => {
   return (
     <InputFieldArea>
-      <Label>{label}</Label>
+      {label && <Label>{label}</Label>}
       {inputAttrs.required && <RequiredAsterisk>*</RequiredAsterisk>}
       <InputRow>
         <Input {...register} hasTooltip={Boolean(tooltip)} highlight={highlight} {...inputAttrs} />

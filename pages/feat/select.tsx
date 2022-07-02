@@ -1,10 +1,11 @@
-import { SelectInput } from '@components/molecules';
+import { SelectInput, TextInput } from '@components/molecules';
 import { CommonTemplate } from '@components/templates';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 
 interface SelectForm {
   select: string;
+  test: string;
 }
 const options = [
   { value: '1', label: 'Site searching' },
@@ -40,8 +41,8 @@ const Page: NextPage = () => {
           })}
           label="How did you find out about Lahatjob"
           options={options}
-          name={'select'}
         />
+        <TextInput register={register('test')} />
         <button>submit</button>
       </form>
     </CommonTemplate>
