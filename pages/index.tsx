@@ -21,6 +21,10 @@ const Home: NextPage = () => {
     e.preventDefault();
     router.push('/feat/region');
   };
+  const toModal: MouseEventHandler = (e) => {
+    e.preventDefault();
+    router.push('/feat/modal');
+  };
 
   return (
     <>
@@ -28,6 +32,7 @@ const Home: NextPage = () => {
       <button onClick={toVerifyInput}>verify input</button>
       <button onClick={toSelect}>select</button>
       <button onClick={toRegion}>region</button>
+      <button onClick={toModal}>modal</button>
     </>
   );
 };
