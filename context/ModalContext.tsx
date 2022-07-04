@@ -1,10 +1,18 @@
 import Manager from '@components/atoms/Manager';
 import Overlay from '@components/atoms/Overlay';
 import { ModalType } from '@components/molecules';
-import React, { createContext, ReactNode, useState } from 'react';
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
+
+interface ModalState {
+  isOpen: boolean;
+  modalType: ModalType;
+  [key: string]: any;
+}
 
 type ModalContextType = {
   showModal: (modalType: ModalType) => void;
+  modalState: ModalState;
+  updateModalState: (data: any) => void;
 };
 
 interface ModalContextProps {
@@ -13,11 +21,17 @@ interface ModalContextProps {
   [key: string]: any;
 }
 
-const ModalContext = createContext<ModalContextType>({ showModal: () => {} });
+const ModalContext = createContext<ModalContextType>({
+  showModal: () => {},
+  modalState: { isOpen: false, modalType: 'WELCOME_MODAL' },
+  updateModalState: () => {},
+});
 
-const ModalProvider = ({ modals, children, ...attrs }: ModalContextProps) => {
-  const [open, setOpen] = useState(false);
-  const [modalType, setModalType] = useState<ModalType>();
+export const ModalProvider = ({ modals, children, ...attrs }: ModalContextProps) => {
+  const [modalState, setModalState] = useState<ModalState>({
+    isOpen: false,
+    modalType: 'WELCOME_MODAL',
+  });
 
   if (typeof modals === 'undefined') {
     throw new Error('Pass rootModal as `modals` prop to ModalProvider');
@@ -28,21 +42,40 @@ const ModalProvider = ({ modals, children, ...attrs }: ModalContextProps) => {
   }
 
   const showModal = (modalType: ModalType) => {
-    setModalType(modalType);
-    setOpen(true);
+    setModalState((prev) => {
+      return {
+        ...prev,
+        modalType,
+        isOpen: true,
+      };
+    });
+  };
+
+  const updateModalState = (data: Record<string, any>) => {
+    return setModalState((prev) => {
+      return {
+        ...prev,
+        data,
+      };
+    });
   };
 
   return (
-    <ModalContext.Provider value={{ showModal }} {...attrs}>
+    <ModalContext.Provider value={{ showModal, modalState, updateModalState }} {...attrs}>
       {children}
-      {open && (
+      {modalState.isOpen && (
         <Overlay
           onClick={() => {
             console.log('test');
-            setOpen(false);
+            setModalState((prev) => {
+              return {
+                ...prev,
+                isOpen: false,
+              };
+            });
           }}
         >
-          <Manager modalComps={modals} modalType={modalType!} />
+          <Manager modalComps={modals} modalType={modalState.modalType} />
         </Overlay>
       )}
     </ModalContext.Provider>
@@ -50,17 +83,12 @@ const ModalProvider = ({ modals, children, ...attrs }: ModalContextProps) => {
 };
 
 // Consumer
-const useModal = () => {
+export const useModal = () => {
   const context = React.useContext(ModalContext);
 
   if (!context) {
     throw new Error('useModal must be used within a ModalProvider');
   }
 
-  const { showModal } = context;
-  return {
-    showModal,
-  };
+  return context;
 };
-
-export { Overlay, ModalProvider, useModal };
