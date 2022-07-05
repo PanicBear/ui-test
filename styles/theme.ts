@@ -37,6 +37,12 @@ export const Layout = {
     justify-content: space-between;
     align-items: center;
   `,
+  flexRowBetweenStart: css`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  `,
   flexRowEvenlyCenter: css`
     display: flex;
     flex-direction: row;
@@ -54,6 +60,12 @@ export const Layout = {
     flex-direction: column;
     justify-content: end;
     align-items: center;
+  `,
+  flexColCenterStart: css`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
   `,
   flexColStart: css`
     display: flex;
