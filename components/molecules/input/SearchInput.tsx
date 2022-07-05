@@ -1,4 +1,5 @@
 import { Icon } from '@components/atoms';
+import { ChangeEventHandler, createRef, MutableRefObject, useRef } from 'react';
 import styled from 'styled-components';
 
 const SearchForm = styled.form`
@@ -16,12 +17,20 @@ const SearchField = styled.input`
 
 interface SearchInputProps {
   placeholder?: string;
+  handleSearchChange: (query?: string) => void;
 }
 
-const SearchInput: (props: SearchInputProps) => JSX.Element = ({ placeholder }) => {
+const SearchInput: (props: SearchInputProps) => JSX.Element = ({ placeholder, handleSearchChange }) => {
+  const searchRef = createRef<HTMLInputElement>();
+
+  const onChange = () => {
+    const query = searchRef?.current?.value;
+    handleSearchChange(query);
+  };
+
   return (
     <SearchForm>
-      <SearchField placeholder={placeholder} />
+      <SearchField ref={searchRef} placeholder={placeholder} onChange={onChange} type={'search'} />
       <Icon.Search style={{ position: 'absolute', right: '32px' }} />
     </SearchForm>
   );

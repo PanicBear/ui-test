@@ -3,11 +3,14 @@ import { useEffect } from 'react';
 import CommonTemplate from './CommonTemplate';
 
 const ModalTemplate = () => {
-  const { showModal, modalState } = useModal();
+  const {
+    showModal,
+    modalState: { data },
+  } = useModal();
 
   useEffect(() => {
-    console.log(modalState);
-  }, [modalState]);
+    console.log(data);
+  });
 
   return (
     <CommonTemplate title="Select">

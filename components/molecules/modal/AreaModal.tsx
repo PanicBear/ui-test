@@ -1,8 +1,8 @@
 import { Icon } from '@components/atoms';
-import { regions } from '@constants/region';
-import { Layout } from '@styles/theme';
+import { City, Province, regions } from '@constants/index';
+import { Color, Layout } from '@styles/index';
 import { useModal } from 'context';
-import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { ModalProps } from '.';
 import { SearchInput } from '../input';
@@ -26,17 +26,26 @@ const RegionArea = styled.div`
   background-color: #fff;
   border-radius: 8px;
 `;
-const ProvinceList = styled.ul`
+const ProvinceArea = styled.section`
   width: 136px;
+  height: 100%;
+  background-color: #f5f5f5;
+  border-radius: 8px 0 0 8px;
+`;
+const ProvinceList = styled.ul`
   max-height: 320px;
   padding: 4px 16px;
   margin: 0;
-  background-color: #f5f5f5;
   list-style: none;
   overflow-y: scroll;
-  border-radius: 8px 0 0 8px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
-const ProvinceItem = styled.li`
+const ProvinceItem = styled.li<{ isSelected?: boolean }>`
   ${Layout.flexColCenterStart}
   width: 100%;
   height: 36px;
@@ -48,6 +57,8 @@ const ProvinceItem = styled.li`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  color: ${({ theme, isSelected }) => (isSelected ? theme.Color.Point1 : theme.Color.SemiBlack)};
 `;
 const CityList = styled.ul`
   width: 184px;
@@ -56,6 +67,12 @@ const CityList = styled.ul`
   margin: 0;
   list-style: none;
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 const CityItem = styled.li`
   ${Layout.flexRowBetweenCenter}
@@ -76,45 +93,85 @@ const ModalCloser = styled.div`
   right: 0;
   margin: 8px;
 `;
+const EmptyList = styled.i`
+  ${Layout.flexColCenter}
+  height: 312px;
+  color: ${Color.DarkSlate};
+  box-sizing: border-box;
+`;
 
 interface ModalForm {
   modal: string;
 }
 
-const WelcomeModal = ({ closeModal }: ModalProps) => {
-  const { register, handleSubmit } = useForm<ModalForm>();
-  const { updateModalState } = useModal();
+const AreaModal = ({ closeModal }: ModalProps) => {
+  const {
+    updateModalState,
+    modalState: { data },
+  } = useModal();
 
-  const onValid = (modalForm: ModalForm) => {
-    console.log(modalForm);
-    updateModalState(modalForm);
-    closeModal();
+  useEffect(() => {
+    data && updateModalState(undefined);
+  }, []);
+
+  let filteredRegions = Object.keys(regions).filter((el) =>
+    el
+      .replace(' ', '')
+      .toLowerCase()
+      .match(data?.query ?? ''),
+  ) as Province[];
+
+  const handleSearchChange = (query?: string) => {
+    updateModalState({ query });
+  };
+  const handleProvinceClick = (province: Province) => {
+    data?.province !== province && updateModalState({ ...data, province, city: undefined });
+  };
+  const handleCityClick = (city: City) => {
+    data?.city !== city && updateModalState({ ...data, city });
   };
 
   return (
     <StyledModal>
       <SearchArea>
-        <SearchInput placeholder={'Province Search'} />
+        <SearchInput placeholder={'Province Search'} handleSearchChange={handleSearchChange} />
       </SearchArea>
       <RegionArea>
-        <ProvinceList>
-          {Object.keys(regions).map((province, index) => (
-            <ProvinceItem key={index}>{province}</ProvinceItem>
-          ))}
-        </ProvinceList>
+        <ProvinceArea>
+          <ProvinceList>
+            {Boolean(filteredRegions.length) ? (
+              filteredRegions.map((province, index) => (
+                <ProvinceItem
+                  key={index}
+                  onClick={() => handleProvinceClick(province)}
+                  isSelected={Boolean(data?.province === province)}
+                >
+                  {province}
+                </ProvinceItem>
+              ))
+            ) : (
+              <EmptyList>No result.</EmptyList>
+            )}
+          </ProvinceList>
+        </ProvinceArea>
         <CityList>
-          {regions.Abra.map((city, index) => (
-            <CityItem key={index}>
-              {city} <Icon.Check />
-            </CityItem>
-          ))}
+          {Boolean(data?.province) ? (
+            regions[data.province as Province].map((city, index) => (
+              <CityItem key={index} onClick={() => handleCityClick(city)}>
+                {city}
+                {Boolean(data?.city === city) && <Icon.Check />}
+              </CityItem>
+            ))
+          ) : (
+            <EmptyList>Select province first.</EmptyList>
+          )}
         </CityList>
         <ModalCloser>
-          <Icon.Close onClick={() => console.log('test')} />
+          <Icon.Close onClick={closeModal} />
         </ModalCloser>
       </RegionArea>
     </StyledModal>
   );
 };
 
-export default WelcomeModal;
+export default AreaModal;

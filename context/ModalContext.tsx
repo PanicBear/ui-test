@@ -66,7 +66,6 @@ export const ModalProvider = ({ modals, children, ...attrs }: ModalContextProps)
       {modalState.isOpen && (
         <Overlay
           onClick={() => {
-            console.log('test');
             setModalState((prev) => {
               return {
                 ...prev,
