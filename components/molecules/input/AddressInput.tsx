@@ -1,13 +1,12 @@
 import { Dropdown } from '@components/atoms/Icon';
-import useOutsideClick from '@hooks/useOutSideClick';
-import { useRef, useState } from 'react';
+import { useModal } from 'context';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 import TextInput from './TextInput';
 
 const Wrapper = styled.div`
   position: relative;
-  z-index: 1;
 `;
 const Label = styled.label`
   padding-left: 12px;
@@ -18,8 +17,13 @@ const Label = styled.label`
   letter-spacing: 0px;
   text-align: left;
 `;
-const InvisibleSelect = styled.select`
-  display: none;
+const RequiredAsterisk = styled.span`
+  color: ${({ theme }) => theme.Color.Warning};
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0px;
+  text-align: left;
 `;
 const CustomSelectArea = styled.div`
   width: 100%;
@@ -33,7 +37,6 @@ const CustomSelectArea = styled.div`
 
   ${({ theme }) => theme.Shadow.sm}
 `;
-
 const CustomSelectRow = styled.div`
   padding-bottom: 12px;
   background: ${(props) => props.theme.white};
@@ -48,80 +51,72 @@ const CustomSelectTrigger = styled.div`
   justify-content: space-between;
   cursor: pointer;
 `;
-const CustomOptionArea = styled.div<{ isOpen: boolean }>`
-  margin: 0 -13px;
-  position: absolute;
-  display: block;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: ${(props) => props.theme.white};
-  transition: all 0.5s;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: 2;
-  padding: 8px;
-  /* max-height: 200px; */
-  overflow-y: auto;
-  border: 1px solid black;
-  background-color: white;
-
-  ${({ isOpen }) =>
-    isOpen &&
-    `opacity: 1;
-    visibility: visible;
-    pointer-events: all;
-    margin-top: 8px;
-    box-shadow: -1px 1px 2px rgba(67, 70, 74, 0.0001), -2px 2px 5px rgba(67, 86, 100, 0.123689);
-    border-radius: 8px;`}
-`;
-const Input = styled.input<{ highlight?: boolean; hasTooltip?: boolean }>`
-  width: 100%;
-  height: 50px;
-  padding: 16px 12px;
-  margin-top: 8px;
-  margin-right: ${({ hasTooltip }) => (hasTooltip ? '-20px' : 0)};
-  background-color: ${({ highlight, theme }) => (highlight ? theme.Color.Point2 : theme.Color.White)};
-  border: 1px solid ${({ highlight, theme }) => (highlight ? theme.Color.Point1 : theme.Color.Slate)};
-  border-radius: 8px;
-
-  ${({ theme }) => theme.Shadow.sm}
+const HiddenInput = styled.input`
+  display: none;
 `;
 
-interface SelectProps {
+interface AddressProps {
   label: string;
   required?: boolean;
 }
 
-const Address = ({ label }: SelectProps) => {
-  const [isOpen, setOpen] = useState(false);
-  const [selected, setSelected] = useState<string>('');
-  const selectRef = useRef(null);
-  const { register } = useFormContext();
+const Address = ({ label, required }: AddressProps) => {
+  const {
+    register,
+    formState: {
+      errors: { province, city, detail },
+    },
+    setValue,
+  } = useFormContext();
+  const {
+    showModal,
+    modalState: { data },
+  } = useModal();
 
-  useOutsideClick(selectRef, () => {
-    setOpen(false);
-  });
+  const handleAreaSelect = () => {
+    showModal('AREA_MODAL');
+  };
+
+  useEffect(() => {
+    data?.province && setValue('province', data.province);
+    data?.city && setValue('city', data.city);
+  }, [data]);
 
   return (
     <Wrapper>
       <Label>{label}</Label>
-      <CustomSelectArea
-        ref={selectRef}
-        onClick={() => {
-          setOpen((prev) => !prev);
-        }}
-      >
+      {required && <RequiredAsterisk>*</RequiredAsterisk>}
+      <CustomSelectArea>
         <CustomSelectRow>
-          <CustomSelectTrigger>
-            {/* <span>{options.find((item) => item.value === selected)?.label || 'Select'}</span> */}
-            <span></span>
+          <CustomSelectTrigger onClick={handleAreaSelect}>
+            <span>
+              {Boolean(data?.city) && `${data.city}, `}
+              {Boolean(data?.province) && `${data.province}`}
+            </span>
             <Dropdown />
           </CustomSelectTrigger>
         </CustomSelectRow>
       </CustomSelectArea>
-      <Input placeholder="Address Detail" />
+      <HiddenInput
+        {...register('province', { required: { value: true, message: 'Please select both province & city.' } })}
+      />
+      <HiddenInput
+        {...register('city', { required: { value: true, message: 'Please select both province & city.' } })}
+      />
+      <TextInput
+        register={register('detail', {
+          required: {
+            value: true,
+            message: 'Please fill this field',
+          },
+        })}
+        error={{
+          showError: true,
+          message: province?.message || city?.message || detail?.message,
+        }}
+        placeholder="Address Detail"
+        style={{ marginTop: '4px' }}
+      />
     </Wrapper>
   );
 };

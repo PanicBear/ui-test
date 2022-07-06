@@ -1,10 +1,13 @@
-import { AddressInput } from '@components/molecules';
+import { AddressInput, ModalList } from '@components/molecules';
 import { CommonTemplate } from '@components/templates';
+import type { City, Province } from '@constants/region';
+import { ModalProvider } from 'context';
 import { NextPage } from 'next';
 import { FormProvider, useForm } from 'react-hook-form';
 
 interface AddressForm {
-  main: string;
+  province: Province;
+  city: City;
   detail: string;
 }
 
@@ -18,12 +21,14 @@ const Page: NextPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <CommonTemplate title="Select">
-        <form onSubmit={handleSubmit(onValid)}>
-          <AddressInput label={'Address'} required />
-          <button>submit</button>
-        </form>
-      </CommonTemplate>
+      <ModalProvider modals={ModalList}>
+        <CommonTemplate title="Select">
+          <form onSubmit={handleSubmit(onValid)}>
+            <AddressInput label={'Address'} required />
+            <button>submit</button>
+          </form>
+        </CommonTemplate>
+      </ModalProvider>
     </FormProvider>
   );
 };

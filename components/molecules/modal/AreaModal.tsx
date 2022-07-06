@@ -93,9 +93,9 @@ const ModalCloser = styled.div`
   right: 0;
   margin: 8px;
 `;
-const EmptyList = styled.i`
+const EmptyList = styled.i<{ areaHeight: number }>`
   ${Layout.flexColCenter}
-  height: 312px;
+  height:${({ areaHeight }) => areaHeight + 'px'};
   color: ${Color.DarkSlate};
   box-sizing: border-box;
 `;
@@ -150,7 +150,7 @@ const AreaModal = ({ closeModal }: ModalProps) => {
                 </ProvinceItem>
               ))
             ) : (
-              <EmptyList>No result.</EmptyList>
+              <EmptyList areaHeight={320}>No result.</EmptyList>
             )}
           </ProvinceList>
         </ProvinceArea>
@@ -163,7 +163,7 @@ const AreaModal = ({ closeModal }: ModalProps) => {
               </CityItem>
             ))
           ) : (
-            <EmptyList>Select province first.</EmptyList>
+            <EmptyList areaHeight={272}>Select province first.</EmptyList>
           )}
         </CityList>
         <ModalCloser>

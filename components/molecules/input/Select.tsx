@@ -65,6 +65,7 @@ const CustomOptionArea = styled.div<{ isOpen: boolean }>`
   overflow-y: auto;
   border: 1px solid black;
   background-color: white;
+  z-index: 1;
 
   ${({ isOpen }) =>
     isOpen &&
