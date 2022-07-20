@@ -31,6 +31,12 @@ export const Layout = {
     justify-content: start;
     align-items: start;
   `,
+  flexRowStartCenter: css`
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+  `,
   flexRowBetweenCenter: css`
     display: flex;
     flex-direction: row;
