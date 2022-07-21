@@ -25,8 +25,6 @@ const Sidebar = styled.div`
   max-height: 100vh;
   width: 100%;
   height: 640px;
-
-  background-color: slategray;
 `;
 const MainMenuArea = styled.ul`
   ${Layout.flexColStartCenter}
@@ -53,7 +51,16 @@ const SubMenuArea = styled.ul`
   height: 100%;
 `;
 const SubMenuItem = styled.li`
-  padding: 16px 24px;
+  ${Layout.flexColCenterStart}
+  padding: 16px 20px;
+  width: 100%;
+  gap: 24px;
+
+  border-bottom: 1px solid slategray;
+`;
+const SubMenuTitleBar = styled.div`
+  ${Layout.flexRowBetweenCenter}
+  width: 100%;
 `;
 const SubMenuTitle = styled.span`
   font-family: AppleSDGothicNeoB00;
@@ -63,15 +70,53 @@ const SubMenuTitle = styled.span`
   letter-spacing: -0.2px;
   text-align: left;
 `;
+const SubMenuLinkArea = styled.ul`
+  ${Layout.flexColCenterStart}
+  gap: 16px;
+`;
+const SubMenuLinkItem = styled.li`
+  text-align: left;
+`;
 
 interface HeaderProps {
   isRootPage?: boolean;
   children?: ReactNode;
 }
 
+type SidebarMenu = 'Jobs Info' | 'Talent Info' | 'Individual Service' | 'Company Service' | 'Customer Service';
+const menuObj: Record<SidebarMenu, Record<string, string[]>> = {
+  'Jobs Info': {
+    'Job ads': ['All Jobs', 'Today Jobs', 'Safe Jobs'],
+    Region: ['Jobs by Region', 'Job map', 'Job metro', 'Nearby the University'],
+    Specialization: ['Jobs by specialization'],
+    'By period': ['Jobs by period'],
+    'By Salary& Welfare': ['Jobs by salary', 'Same-day payment', 'jobs by Welfare benefits'],
+    'By theme': ['Preference', 'Beginner possible', 'Hot jobs', 'At Home', 'With Friend', 'Application Method'],
+  },
+  'Talent Info': {
+    'Talent Home': ['All talent', 'Today Talent', 'Preference Talent'],
+  },
+  // 북마크한 서비스와 헷갈릴거 같아서 my service에서 개인 서비스로 대체
+  'Individual Service': {
+    Resume: ['Resume management', 'Porfolio management', 'Viewed Resume', 'Application Offer', 'Scrapped Resume'],
+    Activity: ['Application status'],
+    'Job Info': ['Scrapped Job ads', 'Company of interest'],
+    'Member Info': ['Member info Settings'],
+  },
+  'Company Service': {
+    'Job ad/Applicant': ['Job ad Register', 'Job ad management', 'Applicant Management'],
+    Talent: ['Scrapped Talents', 'Application Offer'],
+    'Member Info': ['Member info Settings'],
+  },
+  'Customer Service': {
+    'Customer Service Home': ['Event', 'Notice', 'Q&A'],
+  },
+};
+
 const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, children }) => {
   const selectRef = useRef(null);
   const [isSidebarToggled, setSidebarToggled] = useState(false);
+  const [menu, setMenu] = useState<SidebarMenu>('Jobs Info');
   const [isOpen, setIsOpen] = useState(false);
 
   useOutSideClick(selectRef, () => {
@@ -119,13 +164,28 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
       {isSidebarToggled && (
         <Sidebar>
           <MainMenuArea>
-            <MainMenuItem>Jobs Info</MainMenuItem>
-            <MainMenuItem>Talent Info</MainMenuItem>
-            <MainMenuItem>My Service</MainMenuItem>
-            <MainMenuItem>Customer Service</MainMenuItem>
+            <MainMenuItem isActive={menu === 'Jobs Info'}>Jobs Info</MainMenuItem>
+            <MainMenuItem isActive={menu === 'Talent Info'}>Talent Info</MainMenuItem>
+            <MainMenuItem isActive={menu === 'Individual Service'}>Individual Service</MainMenuItem>
+            <MainMenuItem isActive={menu === 'Company Service'}>Company Service</MainMenuItem>
+            <MainMenuItem isActive={menu === 'Customer Service'}>Customer Service</MainMenuItem>
           </MainMenuArea>
           <SubMenuArea>
-            <SubMenuItem></SubMenuItem>
+            {Object.keys(menuObj[menu]).map((subTitle, index) => {
+              return (
+                <SubMenuItem key={index}>
+                  <SubMenuTitleBar>
+                    <SubMenuTitle>{subTitle}</SubMenuTitle>
+                    <Icon.Bookmark />
+                  </SubMenuTitleBar>
+                  <SubMenuLinkArea>
+                    {menuObj[menu][subTitle].map((link, index) => {
+                      return <SubMenuLinkItem key={index}>{link}</SubMenuLinkItem>;
+                    })}
+                  </SubMenuLinkArea>
+                </SubMenuItem>
+              );
+            })}
           </SubMenuArea>
         </Sidebar>
       )}
