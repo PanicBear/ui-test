@@ -1,6 +1,9 @@
 import { createGlobalStyle, css } from 'styled-components';
+import reset from 'styled-reset';
 
 export const GlobalStyles = createGlobalStyle`
+  ${reset}
+
   html, body {
     padding: 0;
     margin: 0;
@@ -72,6 +75,12 @@ export const Layout = {
     flex-direction: column;
     justify-content: center;
     align-items: start;
+  `,
+  flexColStartCenter: css`
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
   `,
   flexColStart: css`
     display: flex;
