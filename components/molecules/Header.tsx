@@ -1,7 +1,8 @@
 import { Icon, Logo } from '@components/atoms';
+import Overlay from '@components/atoms/Overlay';
 import { useOutSideClick } from '@hooks/index';
 import { Color, Layout } from '@styles/index';
-import { MouseEventHandler, ReactNode, useRef, useState } from 'react';
+import { MouseEventHandler, ReactNode, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Dropdown from './Dropdown';
 
@@ -16,21 +17,26 @@ const HeaderMenuBar = styled.header`
 `;
 const ButtonArea = styled.div`
   ${Layout.flexRowCenter}
-  gap: 32px;
+  gap: 16px;
 `;
 const Sidebar = styled.div`
   ${Layout.flexRowCenter};
-  position: fixed;
+  margin-top: 68px;
+  padding-top: 6px;
   max-width: 425px;
   max-height: 100vh;
   width: 100%;
-  height: 640px;
+  height: 572px;
+
+  background-color: ${Color.Slate};
 `;
 const MainMenuArea = styled.ul`
   ${Layout.flexColStartCenter}
   height: 100%;
   flex: 1;
   background-color: ${Color.LightSlate};
+
+  overflow-y: scroll;
 `;
 const MainMenuItem = styled.li<{ isActive?: boolean }>`
   width: 100%;
@@ -49,14 +55,18 @@ const SubMenuArea = styled.ul`
   ${Layout.flexColStartCenter}
   flex: 2;
   height: 100%;
+  background-color: ${Color.White};
+
+  overflow-y: scroll;
 `;
 const SubMenuItem = styled.li`
   ${Layout.flexColCenterStart}
   padding: 16px 20px;
   width: 100%;
-  gap: 24px;
 
-  border-bottom: 1px solid slategray;
+  &:not(:last-child) {
+    border: 0.5px solid #e6e6e6;
+  }
 `;
 const SubMenuTitleBar = styled.div`
   ${Layout.flexRowBetweenCenter}
@@ -72,9 +82,20 @@ const SubMenuTitle = styled.span`
 `;
 const SubMenuLinkArea = styled.ul`
   ${Layout.flexColCenterStart}
+  padding: 16px 12px;
   gap: 16px;
 `;
-const SubMenuLinkItem = styled.li`
+const SubMenuLinkRow = styled.li`
+  ${Layout.flexRowStartCenter}
+  gap: 8px;
+`;
+const SubMenuCustomDisc = styled.div`
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: black;
+`;
+const SubMenuLinkItem = styled.a`
   text-align: left;
 `;
 
@@ -116,7 +137,7 @@ const menuObj: Record<SidebarMenu, Record<string, string[]>> = {
 const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, children }) => {
   const selectRef = useRef(null);
   const [isSidebarToggled, setSidebarToggled] = useState(false);
-  const [menu, setMenu] = useState<SidebarMenu>('Jobs Info');
+  const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('Jobs Info');
   const [isOpen, setIsOpen] = useState(false);
 
   useOutSideClick(selectRef, () => {
@@ -136,14 +157,26 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
 
     setIsOpen((prev) => !prev);
   };
-  const handleSidebarToggle = () => {
+  const handleMenuIconClick = () => {
+    setSidebarToggled(true);
+  };
+  const handleOverlayClick = () => {
     setSidebarToggled(false);
   };
+  const handleMenuClick = (clickedMenu: SidebarMenu) => {
+    if (clickedMenu === selectedMenu) return;
+
+    setSelectedMenu(clickedMenu);
+  };
+
+  useEffect(() => {
+    console.log(selectedMenu);
+  });
 
   return (
     <>
       <HeaderMenuBar>
-        {Boolean(isRootPage && !isSidebarToggled) && <Icon.Menu onClick={() => setSidebarToggled(true)} />}
+        {Boolean(isRootPage && !isSidebarToggled) && <Icon.Menu onClick={handleMenuIconClick} />}
         <Logo />
         <ButtonArea>
           {isRootPage && (
@@ -162,32 +195,45 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
         </ButtonArea>
       </HeaderMenuBar>
       {isSidebarToggled && (
-        <Sidebar>
-          <MainMenuArea>
-            <MainMenuItem isActive={menu === 'Jobs Info'}>Jobs Info</MainMenuItem>
-            <MainMenuItem isActive={menu === 'Talent Info'}>Talent Info</MainMenuItem>
-            <MainMenuItem isActive={menu === 'Individual Service'}>Individual Service</MainMenuItem>
-            <MainMenuItem isActive={menu === 'Company Service'}>Company Service</MainMenuItem>
-            <MainMenuItem isActive={menu === 'Customer Service'}>Customer Service</MainMenuItem>
-          </MainMenuArea>
-          <SubMenuArea>
-            {Object.keys(menuObj[menu]).map((subTitle, index) => {
-              return (
-                <SubMenuItem key={index}>
-                  <SubMenuTitleBar>
-                    <SubMenuTitle>{subTitle}</SubMenuTitle>
-                    <Icon.Bookmark />
-                  </SubMenuTitleBar>
-                  <SubMenuLinkArea>
-                    {menuObj[menu][subTitle].map((link, index) => {
-                      return <SubMenuLinkItem key={index}>{link}</SubMenuLinkItem>;
-                    })}
-                  </SubMenuLinkArea>
-                </SubMenuItem>
-              );
-            })}
-          </SubMenuArea>
-        </Sidebar>
+        <Overlay onClick={handleOverlayClick}>
+          <Sidebar>
+            <MainMenuArea>
+              {Object.keys(menuObj).map((title, index) => {
+                return (
+                  <MainMenuItem
+                    key={index}
+                    isActive={selectedMenu === title}
+                    onClick={() => handleMenuClick(title as SidebarMenu)}
+                  >
+                    {title}
+                  </MainMenuItem>
+                );
+              })}
+            </MainMenuArea>
+            <SubMenuArea>
+              {Object.keys(menuObj[selectedMenu]).map((subTitle, index) => {
+                return (
+                  <SubMenuItem key={index}>
+                    <SubMenuTitleBar>
+                      <SubMenuTitle>{subTitle}</SubMenuTitle>
+                      <Icon.Bookmark />
+                    </SubMenuTitleBar>
+                    <SubMenuLinkArea>
+                      {menuObj[selectedMenu][subTitle].map((link, index) => {
+                        return (
+                          <SubMenuLinkRow>
+                            <SubMenuCustomDisc />
+                            <SubMenuLinkItem key={index}>{link}</SubMenuLinkItem>
+                          </SubMenuLinkRow>
+                        );
+                      })}
+                    </SubMenuLinkArea>
+                  </SubMenuItem>
+                );
+              })}
+            </SubMenuArea>
+          </Sidebar>
+        </Overlay>
       )}
     </>
   );

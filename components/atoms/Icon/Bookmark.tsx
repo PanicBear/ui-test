@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { SVGIconProps } from '.';
 
 const Bookmark: (props: SVGIconProps) => JSX.Element = ({
-  fill = Color.Point1,
+  fill = Color.DarkSlate,
   width = 24,
   height = 24,
   onClick,
