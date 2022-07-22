@@ -105,7 +105,7 @@ interface HeaderProps {
 }
 
 type SidebarMenu = 'Jobs Info' | 'Talent Info' | 'Individual Service' | 'Company Service' | 'Customer Service';
-const menuObj: Record<SidebarMenu, Record<string, string[]>> = {
+const menu: Record<SidebarMenu, Record<string, string[]>> = {
   'Jobs Info': {
     'Job ads': ['All Jobs', 'Today Jobs', 'Safe Jobs'],
     Region: ['Jobs by Region', 'Job map', 'Job metro', 'Nearby the University'],
@@ -198,7 +198,7 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
         <Overlay onClick={handleOverlayClick}>
           <Sidebar>
             <MainMenuArea>
-              {Object.keys(menuObj).map((title, index) => {
+              {Object.keys(menu).map((title, index) => {
                 return (
                   <MainMenuItem
                     key={index}
@@ -211,7 +211,7 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
               })}
             </MainMenuArea>
             <SubMenuArea>
-              {Object.keys(menuObj[selectedMenu]).map((subTitle, index) => {
+              {Object.keys(menu[selectedMenu]).map((subTitle, index) => {
                 return (
                   <SubMenuItem key={index}>
                     <SubMenuTitleBar>
@@ -219,7 +219,7 @@ const HeaderMenu: (props: HeaderProps) => JSX.Element = ({ isRootPage = false, c
                       <Icon.Bookmark />
                     </SubMenuTitleBar>
                     <SubMenuLinkArea>
-                      {menuObj[selectedMenu][subTitle].map((link, index) => {
+                      {menu[selectedMenu][subTitle].map((link, index) => {
                         return (
                           <SubMenuLinkRow>
                             <SubMenuCustomDisc />
