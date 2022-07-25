@@ -14,8 +14,6 @@ const HeaderMenuBar = styled.header`
   z-index: 2;
 
   gap: 12px;
-
-  border-bottom: 1px solid ${Color.Slate};
 `;
 
 interface HeaderProps {
