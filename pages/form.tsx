@@ -1,6 +1,20 @@
 import { NextPage } from 'next';
 
+import * as yup from 'yup';
+
 const Form:NextPage = () => {
+
+  const schema = yup.object().shape({
+    email: yup.string().email().required(),
+    name: yup.string().required(),
+    pw: yup.string().min(7).max(10).required(),
+    checkPw: yup
+      .string()
+      .oneOf([yup.ref('pw'), null])
+      .required(),
+  });
+
+
   return <div>
     <form>
       <label htmlFor="email">이메일</label>
