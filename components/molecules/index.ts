@@ -5,6 +5,7 @@ export { default as Header } from './Header';
 export { default as Dropdown } from './Dropdown';
 export { default as Sidebar } from './Sidebar';
 export { default as SearchHeader } from './SearchHeader';
+export { default as FormField } from './FormField';
 
 export * from './input';
 export * from './modal';
