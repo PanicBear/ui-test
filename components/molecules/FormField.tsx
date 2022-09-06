@@ -38,12 +38,12 @@ const FormField: (props: FormFieldProps) => JSX.Element = ({}) => {
     <>
       <p>{checkedLength}</p>
       <SField>
-        <CheckBox name="field.check1" label="check1" isClickable={true} dispatcher={allDispatcher} />
-        <CheckBox name="field.check2" label="check2" isClickable={true} dispatcher={defaultDispatcher} />
-        <CheckBox name="field.check3" label="check3" isClickable={true} dispatcher={defaultDispatcher} />
-        <CheckBox name="field.check4" label="check4" isClickable={true} dispatcher={defaultDispatcher} />
-        <CheckBox name="field.check5" label="check5" isClickable={true} dispatcher={defaultDispatcher} />
-        <CheckBox name="field.check6" label="check6" isClickable={true} dispatcher={defaultDispatcher} />
+        <CheckBox name="field.check1" label="check1" dispatcher={allDispatcher} />
+        <CheckBox name="field.check2" label="check2" dispatcher={defaultDispatcher} />
+        <CheckBox name="field.check3" label="check3" dispatcher={defaultDispatcher} />
+        <CheckBox name="field.check4" label="check4" dispatcher={defaultDispatcher} />
+        <CheckBox name="field.check5" label="check5" dispatcher={defaultDispatcher} />
+        <CheckBox name="field.check6" label="check6" dispatcher={defaultDispatcher} />
       </SField>
     </>
   );

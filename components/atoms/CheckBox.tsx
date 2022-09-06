@@ -61,7 +61,6 @@ const SInput = styled.input`
 interface CheckBoxProps {
   name: string;
   label: string;
-  isClickable?: boolean;
   dispatcher: Record<'Activate' | 'Deactivate', MouseEventHandler>;
 }
 
