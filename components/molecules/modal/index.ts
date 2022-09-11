@@ -2,6 +2,8 @@ import FarewellModal from './FarewellModal';
 import WelcomeModal from './WelcomeModal';
 import AreaModal from './AreaModal';
 
+export { default as ModalLayout } from './ModalLayout';
+
 export type ModalType = 'WELCOME_MODAL' | 'FAREWELL_MODAL' | 'AREA_MODAL';
 
 export interface ModalProps {

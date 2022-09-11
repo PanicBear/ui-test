@@ -1,13 +1,18 @@
+import { RecoilModalManager } from '@components/atoms';
 import { Color, GlobalStyles, Layout, Shadow } from '@styles/index';
 import type { AppProps } from 'next/app';
+import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider theme={{ Color, Shadow, Layout }}>
-      <GlobalStyles />
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider theme={{ Color, Shadow, Layout }}>
+        <RecoilModalManager />
+        <GlobalStyles />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 

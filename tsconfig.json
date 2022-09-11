@@ -23,7 +23,8 @@
       "@utils/*": ["utils/*"],
       "@libs/*": ["libs/*"],
       "@constants/*": ["constants/*"],
-      "@auth/*": ["auth/*"]
+      "@auth/*": ["auth/*"],
+      "@store/*": ["store/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
