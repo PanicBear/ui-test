@@ -1,2 +1,2 @@
 export { default as useOutSideClick } from './useOutSideClick';
-export * from './useModal';
+export { default as useModal } from './useModal';

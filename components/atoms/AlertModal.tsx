@@ -1,6 +1,6 @@
+import { ModalLayout } from '@components/molecules';
 import useModal from '@hooks/useModal';
 import styled from 'styled-components';
-import { ModalLayout } from '@components/molecules';
 import { AlertModalProps } from '.';
 
 const StyledModal = styled(ModalLayout)`
@@ -27,7 +27,7 @@ const AlertModal = ({ message, confirmText = 'Ok', handleClose, handleConfirm }:
 
   return (
     <StyledModal>
-      <p>test</p>
+      <p style={{ backgroundColor: 'white' }}>test</p>
     </StyledModal>
   );
 };
